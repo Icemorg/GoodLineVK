@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.vk.api.sdk.VK;
-import com.vk.api.sdk.VKApiCallback;
 import com.vk.api.sdk.auth.VKAccessToken;
+import com.vk.api.sdk.auth.VKAuthCallback;
 import com.vk.api.sdk.auth.VKScope;
-import com.vk.api.sdk.exceptions.VKApiExecutionException;
-import com.vk.api.sdk.internal.VKErrorUtils;
 import com.vk.api.sdk.utils.VKUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,17 +32,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!VK.onActivityResult(requestCode, resultCode, data, new VKApiCallback<VKAccessToken>() {
+        if (!VK.onActivityResult(requestCode, resultCode, data, new VKAuthCallback() {
 
             @Override
-            public void success(VKAccessToken vkAccessToken) {
-                Toast.makeText(this,"Good", Toast.LENGTH_LONG).show();
+            public void onLoginFailed(int i) {
+                Toast.makeText(getApplicationContext(),"NO ACCESS!", Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void fail(@NotNull VKApiExecutionException e) {
-
+            public void onLogin(@NotNull VKAccessToken vkAccessToken) {
+                Toast.makeText(getApplicationContext(),"Good!", Toast.LENGTH_LONG).show();
             }
+
         })) {
             super.onActivityResult(requestCode, resultCode, data);
         }
